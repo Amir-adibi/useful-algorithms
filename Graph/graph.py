@@ -33,6 +33,15 @@ class Traverser:
     visit_sequence: List
     order: str
 
+    def visit(self, index):
+        self.visit_sequence.append(index)
+
+    def print_visit_sequence(self):
+        print(self.visit_sequence)
+
+
+class DFS(Traverser):
+
     def dfs(self, graph: Graph, order='PRE-ORDER'):
         self.order = order
         self.visit_sequence = []
@@ -41,11 +50,11 @@ class Traverser:
         vertex = Vertex(0, graph.matrix[0])
         self.__perform_dfs(graph.matrix, vertex)
 
-        self.__print_visit_sequence()
+        self.print_visit_sequence()
 
     def __perform_dfs(self, matrix: List, vertex: Vertex):
         if self.order == 'PRE-ORDER':
-            self.__visit(vertex.index)
+            self.visit(vertex.index)
         self.marked[vertex.index] = True
 
         for index in vertex.neighbors:
@@ -53,7 +62,7 @@ class Traverser:
                 self.__perform_dfs(matrix, Vertex(index, matrix[index]))
 
         if self.order == 'POST-ORDER':
-            self.__visit(vertex.index)
+            self.visit(vertex.index)
 
     def dfs_iter(self, graph: Graph):
         self.visit_sequence = []
@@ -65,20 +74,14 @@ class Traverser:
         while len(stack):
             vertex = stack.pop()
             if not self.marked[vertex.index]:
-                self.__visit(vertex.index)
+                self.visit(vertex.index)
                 self.marked[vertex.index] = True
 
                 for index in vertex.neighbors:
                     if not self.marked[index]:
                         stack.append(Vertex(index, graph.matrix[index]))
 
-        self.__print_visit_sequence()
-
-    def __visit(self, index):
-        self.visit_sequence.append(index)
-
-    def __print_visit_sequence(self):
-        print(self.visit_sequence)
+        self.print_visit_sequence()
 
 
 graph = Graph([[1, 1, 1, 1, 0],
@@ -87,7 +90,7 @@ graph = Graph([[1, 1, 1, 1, 0],
                [1, 1, 1, 1, 1],
                [0, 0, 0, 1, 1]])
 
-traverse = Traverser()
+traverse = DFS()
 traverse.dfs(graph)
 traverse.dfs(graph, order='POST-ORDER')
 traverse.dfs_iter(graph)
