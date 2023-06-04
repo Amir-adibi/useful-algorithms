@@ -9,23 +9,15 @@ class Graph:
         self.matrix = matrix
         self.size = len(matrix)
 
-
-class Vertex:
-    index: int
-    neighbors: List
-
-    # the row argument indicates the row of the original matrix which corresponds to this vertex.
-    def __init__(self, index, row):
-        self.index = index
-        self.__find_neighbors(row)
-
-    def __find_neighbors(self, row):
-        self.neighbors = []
+    def neighbors(self, vertex):
+        neighbors = []
         IS_CONNECTED = 1
 
-        for v in range(len(row)):
-            if row[v] == IS_CONNECTED and v != self.index:
-                self.neighbors.append(v)
+        for v in range(self.size):
+            if self.matrix[vertex][v] == IS_CONNECTED and v != vertex:
+                neighbors.append(v)
+
+        return neighbors
 
 
 class Traverser:
@@ -47,64 +39,66 @@ class DFS(Traverser):
         self.visit_sequence = []
         self.marked = [False] * graph.size
 
-        vertex = Vertex(0, graph.matrix[0])
+        vertex = 0
         self.__perform_dfs(graph.matrix, vertex)
 
         self.print_visit_sequence()
 
-    def __perform_dfs(self, matrix: List, vertex: Vertex):
+    def __perform_dfs(self, matrix: List, vertex: int):
         if self.order == 'PRE-ORDER':
-            self.visit(vertex.index)
-        self.marked[vertex.index] = True
+            self.visit(vertex)
 
-        for index in vertex.neighbors:
+        self.marked[vertex] = True
+        for index in graph.neighbors(vertex):
             if not self.marked[index]:
-                self.__perform_dfs(matrix, Vertex(index, matrix[index]))
+                self.__perform_dfs(matrix, index)
 
         if self.order == 'POST-ORDER':
-            self.visit(vertex.index)
+            self.visit(vertex)
 
     def dfs_iter(self, graph: Graph):
         self.visit_sequence = []
         self.marked = [False] * graph.size
+        vertex = 0
 
-        vertex = Vertex(0, graph.matrix[0])
+        self.__perform_dfs_iter(vertex)
+
+        self.print_visit_sequence()
+
+    def __perform_dfs_iter(self, vertex):
         stack = [vertex]
 
         while len(stack):
             vertex = stack.pop()
-            if not self.marked[vertex.index]:
-                self.visit(vertex.index)
-                self.marked[vertex.index] = True
+            if not self.marked[vertex]:
+                self.visit(vertex)
+                self.marked[vertex] = True
 
-                for index in vertex.neighbors:
+                for index in graph.neighbors(vertex):
                     if not self.marked[index]:
-                        stack.append(Vertex(index, graph.matrix[index]))
+                        stack.append(index)
 
-        self.print_visit_sequence()
 
 class BFS(Traverser):
     def bfs(self, graph: Graph):
         self.visit_sequence = []
         self.marked = [False] * graph.size
 
-        vertex = Vertex(0, graph.matrix[0])
-        self.__perform_bfs(graph.matrix, vertex)
+        vertex = 0
+        self.__perform_bfs(vertex)
 
         self.print_visit_sequence()
 
-    def __perform_bfs(self, matrix: List, vertex: Vertex):
+    def __perform_bfs(self, vertex: int):
         queue = [vertex]
 
         while len(queue):
             vertex = queue.pop(0)
-            if not self.marked[vertex.index]:
-                self.visit(vertex.index)
-                self.marked[vertex.index] = True
-                for w in vertex.neighbors:
-                    queue.append(Vertex(w, matrix[w]))
-
-
+            if not self.marked[vertex]:
+                self.visit(vertex)
+                self.marked[vertex] = True
+                for w in graph.neighbors(vertex):
+                    queue.append(w)
 
 
 graph = Graph([[1, 1, 1, 1, 0],
