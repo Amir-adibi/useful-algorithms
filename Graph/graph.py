@@ -9,7 +9,7 @@ class Graph:
         self.matrix = matrix
         self.size = len(matrix)
 
-    def neighbors(self, vertex):
+    def neighbors(self, vertex) -> List:
         neighbors = []
         IS_CONNECTED = 1
 
@@ -25,16 +25,13 @@ class Traverser:
     visit_sequence: List
     order: str
 
-    def visit(self, index):
+    def visit(self, index) -> None:
         self.visit_sequence.append(index)
-
-    def print_visit_sequence(self):
-        print(self.visit_sequence)
 
 
 class DFS(Traverser):
 
-    def dfs(self, graph: Graph, order='PRE-ORDER'):
+    def dfs(self, graph: Graph, order='PRE-ORDER') -> List:
         self.order = order
         self.visit_sequence = []
         self.marked = [False] * graph.size
@@ -42,9 +39,9 @@ class DFS(Traverser):
         vertex = 0
         self.__perform_dfs(graph.matrix, vertex)
 
-        self.print_visit_sequence()
+        return self.visit_sequence
 
-    def __perform_dfs(self, matrix: List, vertex: int):
+    def __perform_dfs(self, matrix: List, vertex: int) -> None:
         if self.order == 'PRE-ORDER':
             self.visit(vertex)
 
@@ -56,16 +53,16 @@ class DFS(Traverser):
         if self.order == 'POST-ORDER':
             self.visit(vertex)
 
-    def dfs_iter(self, graph: Graph):
+    def dfs_iter(self, graph: Graph) -> List:
         self.visit_sequence = []
         self.marked = [False] * graph.size
         vertex = 0
 
         self.__perform_dfs_iter(vertex)
 
-        self.print_visit_sequence()
+        return self.visit_sequence
 
-    def __perform_dfs_iter(self, vertex):
+    def __perform_dfs_iter(self, vertex: int) -> None:
         stack = [vertex]
 
         while len(stack):
@@ -80,16 +77,16 @@ class DFS(Traverser):
 
 
 class BFS(Traverser):
-    def bfs(self, graph: Graph):
+    def bfs(self, graph: Graph) -> None:
         self.visit_sequence = []
         self.marked = [False] * graph.size
 
         vertex = 0
         self.__perform_bfs(vertex)
 
-        self.print_visit_sequence()
+        return self.visit_sequence
 
-    def __perform_bfs(self, vertex: int):
+    def __perform_bfs(self, vertex: int) -> None:
         queue = [vertex]
 
         while len(queue):
@@ -108,9 +105,9 @@ graph = Graph([[1, 1, 1, 1, 0],
                [0, 0, 0, 1, 1]])
 
 depth = DFS()
-depth.dfs(graph)
-depth.dfs(graph, order='POST-ORDER')
-depth.dfs_iter(graph)
+print(depth.dfs(graph))
+print(depth.dfs(graph, order='POST-ORDER'))
+print(depth.dfs_iter(graph))
 
 breadth = BFS()
-breadth.bfs(graph)
+print((breadth.bfs(graph)))
