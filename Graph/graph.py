@@ -83,6 +83,29 @@ class DFS(Traverser):
 
         self.print_visit_sequence()
 
+class BFS(Traverser):
+    def bfs(self, graph: Graph):
+        self.visit_sequence = []
+        self.marked = [False] * graph.size
+
+        vertex = Vertex(0, graph.matrix[0])
+        self.__perform_bfs(graph.matrix, vertex)
+
+        self.print_visit_sequence()
+
+    def __perform_bfs(self, matrix: List, vertex: Vertex):
+        queue = [vertex]
+
+        while len(queue):
+            vertex = queue.pop(0)
+            if not self.marked[vertex.index]:
+                self.visit(vertex.index)
+                self.marked[vertex.index] = True
+                for w in vertex.neighbors:
+                    queue.append(Vertex(w, matrix[w]))
+
+
+
 
 graph = Graph([[1, 1, 1, 1, 0],
                [1, 1, 0, 1, 0],
@@ -90,7 +113,10 @@ graph = Graph([[1, 1, 1, 1, 0],
                [1, 1, 1, 1, 1],
                [0, 0, 0, 1, 1]])
 
-traverse = DFS()
-traverse.dfs(graph)
-traverse.dfs(graph, order='POST-ORDER')
-traverse.dfs_iter(graph)
+depth = DFS()
+depth.dfs(graph)
+depth.dfs(graph, order='POST-ORDER')
+depth.dfs_iter(graph)
+
+breadth = BFS()
+breadth.bfs(graph)
