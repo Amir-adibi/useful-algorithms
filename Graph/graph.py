@@ -35,10 +35,8 @@ class Traverser:
     # TODO: check again this line
     visit_sequence: List
 
-    def __init__(self):
-        self.visit_sequence = []
-
     def dfs(self, graph: Graph):
+        self.visit_sequence = []
         self.marked = [False] * graph.size
         vertex = Vertex(0, graph.matrix[0])
 
@@ -46,19 +44,37 @@ class Traverser:
         self.__print_visit_sequence()
 
     def __perform_dfs(self, matrix, vertex):
-        self.marked[vertex.index] = True
         self.__visit(vertex.index)
 
-        for neighbor in vertex.neighbors:
-            if not self.marked[neighbor]:
-                self.__perform_dfs(matrix, Vertex(neighbor, matrix[neighbor]))
+        for index in vertex.neighbors:
+            if not self.marked[index]:
+                self.__perform_dfs(matrix, Vertex(index, matrix[index]))
+
+    def dfs_iter(self, graph: Graph):
+        self.visit_sequence = []
+        self.marked = [False] * graph.size
+        vertex = Vertex(0, graph.matrix[0])
+        stack = [vertex]
+        while len(stack):
+            vertex = stack.pop()
+            if not self.marked[vertex.index]:
+                self.__visit(vertex.index)
+                for index in vertex.neighbors:
+                    if not self.marked[index]:
+                        stack.append(Vertex(index, graph.matrix[index]))
+
+        self.__print_visit_sequence()
+
 
     # TODO: check again this line
     def __visit(self, index):
+        self.marked[index] = True
         self.visit_sequence.append(index)
 
     def __print_visit_sequence(self):
         print(self.visit_sequence)
+
+
 
 
 graph = Graph([[1, 1, 1, 1, 0],
@@ -69,4 +85,5 @@ graph = Graph([[1, 1, 1, 1, 0],
 
 traverse = Traverser()
 traverse.dfs(graph)
+traverse.dfs_iter(graph)
 
