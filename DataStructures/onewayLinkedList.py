@@ -26,7 +26,7 @@ class LinkedList:
 
         if self.tail == self.head:
             result = self.tail.value
-            self.tail = self.head = 0
+            self.tail = self.head = None
             self.length -= 1
 
             return result
@@ -166,6 +166,23 @@ print('tail is:', my_LL.tail.value)
 print('------------')
 
 my_LL.remove(2)
+
+print('(', end='')
+for i in range(my_LL.length):
+    if i == my_LL.length - 1:
+        print(my_LL.get(i), end='')
+    else:
+        print(my_LL.get(i), end=', ')
+
+print(')')
+
+print('head is:', my_LL.head.value)
+print('tail is:', my_LL.tail.value)
+
+print('------------')
+
+my_LL.pop()
+my_LL.pop()
 
 print('(', end='')
 for i in range(my_LL.length):
