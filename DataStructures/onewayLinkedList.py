@@ -21,6 +21,9 @@ class LinkedList:
         self.length += 1
 
     def pop(self):
+        if self.length == 0:
+            raise IndexError
+
         if self.tail == self.head:
             result = self.tail.value
             self.tail = self.head = 0
